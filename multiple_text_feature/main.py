@@ -4,8 +4,8 @@ from sklearn.naive_bayes import *
 
 topic = []
 question = []
-test = []
-test2 = []
+feature = []
+feature_1 = []
 
 with open('data.csv') as f:
 	for line in f:
@@ -14,24 +14,24 @@ with open('data.csv') as f:
 		question.append(data[1])
 
 		if "mortgage" in data[1]:
-			test.append("mortgage")
+			feature.append("mortgage")
 		elif ("dept" in data[1]) and ("collection" in data[1]):
-			test.append("dept_collection")
+			feature.append("dept_collection")
 		elif ("credit" in data[1]) and ("reporting" in data[1]):
-			test.append("credit_reporting")
+			feature.append("credit_reporting")
 		elif ("student" in data[1]) and ("loan" in data[1]):
-			test.append("student_loan")
+			feature.append("student_loan")
 		elif ("bank" in data[1]) and ("account" in data[1]):
-			test.append("bank_account")
+			feature.append("bank_account")
 		elif ("consumer" in data[1]) and ("loan" in data[1]):
-			test.append("consumer_loan")
+			feature.append("consumer_loan")
 		else :
-			test.append("no_cat")
+			feature.append("no_cat")
 
 		if ("credit" in data[1]) and ("reporting" in data[1]):
-			test2.append("creditreporting")
+			feature_1.append("creditreporting")
 		else:
-			test2.append("ZZZZ")
+			feature_1.append("ZZZZ")
         
 unique_topics = list(set(topic))
 new_topic = topic;
@@ -39,7 +39,7 @@ numeric_topics = [name.replace('Mortgage', '1').replace('Debt collection', '2').
 numeric_topics = [float(i) for i in numeric_topics]
 
 Y = np.array(numeric_topics)
-X = zip(*[test, question, test2])
+X = zip(*[feature, question, feature_1])
 
 #from sklearn.feature_extraction.text import TfidfVectorizer
 #vectorizer = TfidfVectorizer()
@@ -56,8 +56,8 @@ clf.fit(bag_of_words, Y)
 
 vectors_test_data=[]
 vectors_test_expected_result=[]
-test_test = []
-test_test2 = []
+feature_test = []
+feature_1_test = []
 
 with open('test_data.txt') as f:
 	for line in f:
@@ -65,29 +65,29 @@ with open('test_data.txt') as f:
 		vectors_test_expected_result.append(data[0])
 		vectors_test_data.append(data[1])
 		if "mortgage" in data[1]:
-			test_test.append("mortgage")
+			feature_test.append("mortgage")
 		elif ("dept" in data[1]) and ("collection" in data[1]):
-			test_test.append("dept_collection")
+			feature_test.append("dept_collection")
 		elif ("credit" in data[1]) and ("reporting" in data[1]):
-			test_test.append("credit_reporting")
+			feature_test.append("credit_reporting")
 		elif ("student" in data[1]) and ("loan" in data[1]):
-			test_test.append("student_loan")
+			feature_test.append("student_loan")
 		elif ("bank" in data[1]) and ("account" in data[1]):
-			test_test.append("bank_account")
+			feature_test.append("bank_account")
 		elif ("consumer" in data[1]) and ("loan" in data[1]):
-			test_test.append("consumer_loan")
+			feature_test.append("consumer_loan")
 		else :
-			test_test.append("no_cat")
+			feature_test.append("no_cat")
 
 		if ("credit" in data[1]) and ("reporting" in data[1]):
-			test_test2.append("creditreporting")
+			feature_1_test.append("creditreporting")
 		else:
-			test_test2.append("ZZZZ")
+			feature_1_test.append("ZZZZ")
 
 numeric_result_topics = [name.replace('Mortgage', '1').replace('Debt collection', '2').replace('Credit reporting', '3').replace('Consumer Loan', '4').replace('Bank account or service', '5').replace('Money transfers', '6').replace('Credit card', '7').replace('Student loan', '8').replace('Payday loan', '9').replace('Prepaid card', '10').replace('Other financial service', '11') for name in vectors_test_expected_result]
 numeric_result_topics = [float(i) for i in numeric_result_topics]
 
-X = list(zip(*[test_test, vectors_test_data, test_test2]))
+X = list(zip(*[feature_test, vectors_test_data, feature_1_test]))
 
 vectors_test = vectorizer.transform(X)
 pred = clf.predict(vectors_test)
