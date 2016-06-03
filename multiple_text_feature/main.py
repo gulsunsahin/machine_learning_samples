@@ -12,12 +12,24 @@ with open('data.csv') as f:
 		data = line.split(';')
 		topic.append(data[0])
 		question.append(data[1])
-		if "mortgage" not in data[1]:
+
+		if "mortgage" in data[1]:
 			test.append("mortgage")
-		else:
-			test.append("YYYY")
-		if "credit" not in data[1]:
-			test2.append("credit")
+		elif ("dept" in data[1]) and ("collection" in data[1]):
+			test.append("dept_collection")
+		elif ("credit" in data[1]) and ("reporting" in data[1]):
+			test.append("credit_reporting")
+		elif ("student" in data[1]) and ("loan" in data[1]):
+			test.append("student_loan")
+		elif ("bank" in data[1]) and ("account" in data[1]):
+			test.append("bank_account")
+		elif ("consumer" in data[1]) and ("loan" in data[1]):
+			test.append("consumer_loan")
+		else :
+			test.append("no_cat")
+
+		if ("credit" in data[1]) and ("reporting" in data[1]):
+			test2.append("creditreporting")
 		else:
 			test2.append("ZZZZ")
         
@@ -52,12 +64,23 @@ with open('test_data.txt') as f:
 		data = line.split(';')
 		vectors_test_expected_result.append(data[0])
 		vectors_test_data.append(data[1])
-		if "mortgage" not in data[1]:
+		if "mortgage" in data[1]:
 			test_test.append("mortgage")
-		else:
-			test_test.append("YYYY")
-		if "credit" not in data[1]:
-			test_test2.append("credit")
+		elif ("dept" in data[1]) and ("collection" in data[1]):
+			test_test.append("dept_collection")
+		elif ("credit" in data[1]) and ("reporting" in data[1]):
+			test_test.append("credit_reporting")
+		elif ("student" in data[1]) and ("loan" in data[1]):
+			test_test.append("student_loan")
+		elif ("bank" in data[1]) and ("account" in data[1]):
+			test_test.append("bank_account")
+		elif ("consumer" in data[1]) and ("loan" in data[1]):
+			test_test.append("consumer_loan")
+		else :
+			test_test.append("no_cat")
+
+		if ("credit" in data[1]) and ("reporting" in data[1]):
+			test_test2.append("creditreporting")
 		else:
 			test_test2.append("ZZZZ")
 
