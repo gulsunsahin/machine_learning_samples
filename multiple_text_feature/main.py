@@ -9,7 +9,7 @@ test2 = []
 
 with open('data.csv') as f:
 	for line in f:
-		data = line.split(',')
+		data = line.split(';')
 		topic.append(data[0])
 		question.append(data[1])
 		if "mortgage" not in data[1]:
@@ -49,7 +49,7 @@ test_test2 = []
 
 with open('test_data.txt') as f:
 	for line in f:
-		data = line.split(',')
+		data = line.split(';')
 		vectors_test_expected_result.append(data[0])
 		vectors_test_data.append(data[1])
 		if "mortgage" not in data[1]:
