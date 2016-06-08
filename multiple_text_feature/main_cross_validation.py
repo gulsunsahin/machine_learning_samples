@@ -1,6 +1,7 @@
 import numpy as np
 import json
 from sklearn.naive_bayes import *
+from sklearn import cross_validation
 
 topic = []
 question = []
@@ -28,7 +29,7 @@ with open('data.csv') as f:
 		else :
 			feature.append("107")
 
-		if ("credit" in data[1]) and ("reporting" in data[1]):
+		if ("Bank of America" in data[1]):
 			feature_1.append("creditreporting")
 		else:
 			feature_1.append("ZZZZ")
@@ -79,7 +80,7 @@ with open('test_data.txt') as f:
 		else :
 			feature_test.append("107")
 
-		if ("credit" in data[1]) and ("reporting" in data[1]):
+		if ("Bank of America" in data[1]):
 			feature_1_test.append("creditreporting")
 		else:
 			feature_1_test.append("ZZZZ")
@@ -99,13 +100,14 @@ for index in range(len(pred)):
 	
 print ("200 veriden yanlis hesaplanan sayisi:")
 print(numberFalse)
+print("")
+print(pred)
 
-vectors_test_data1=["I have to sell my house"]
-vectors_test1 = vectorizer.transform(vectors_test_data1)
-pred1 = clf.predict(vectors_test1)
+from sklearn.metrics import *
+res = confusion_matrix(numeric_result_topics, pred)
+print(res)
 
-print(pred1)
-
-
-
+from sklearn import metrics
+acc = metrics.accuracy_score(numeric_result_topics, pred)
+print(acc) # 0.793 = (184 + 54)/ (184 + 17 + 45 + 54)
 
