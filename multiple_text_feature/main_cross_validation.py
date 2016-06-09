@@ -34,12 +34,7 @@ with open('data.csv') as f:
 		else:
 			feature_1.append("otherbank")
         
-unique_topics = list(set(topic))
-new_topic = topic;
-numeric_topics = [name.replace('Mortgage', '1').replace('Debt collection', '2').replace('Credit reporting', '3').replace('Consumer Loan', '4').replace('Bank account or service', '5').replace('Money transfers', '6').replace('Credit card', '7').replace('Student loan', '8').replace('Payday loan', '9').replace('Prepaid card', '10').replace('Other financial service', '11') for name in new_topic]
-numeric_topics = [float(i) for i in numeric_topics]
 
-Y = np.array(numeric_topics)
 X = list(zip(*[feature, question, feature_1]))
 
 from sklearn.cross_validation import train_test_split
