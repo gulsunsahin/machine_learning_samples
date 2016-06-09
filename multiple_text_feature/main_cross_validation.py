@@ -30,9 +30,9 @@ with open('data.csv') as f:
 			feature.append("107")
 
 		if ("Bank of America" in data[1]):
-			feature_1.append("creditreporting")
+			feature_1.append("bankamerica")
 		else:
-			feature_1.append("ZZZZ")
+			feature_1.append("otherbank")
         
 unique_topics = list(set(topic))
 new_topic = topic;
@@ -44,7 +44,7 @@ X = list(zip(*[feature, question, feature_1]))
 
 from sklearn.cross_validation import train_test_split
 
-X_train, X_test, y_train, y_test = train_test_split(X, topic, test_size=0.10, random_state=30)
+X_train, X_test, y_train, y_test = train_test_split(X, topic, test_size=0.30, random_state=50)
 
 from sklearn.feature_extraction.text import CountVectorizer
 vectorizer =  CountVectorizer(tokenizer=lambda doc: doc, lowercase=False)
