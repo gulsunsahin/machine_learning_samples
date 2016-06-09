@@ -17,14 +17,14 @@ english_stemmer = nltk.stem.SnowballStemmer('english')
 class StemmedCountVectorizer(CountVectorizer):
 	  def build_analyzer(self):
 		  analyzer = super(CountVectorizer, self).build_analyzer()
-		  q = lambda doc:(english_stemmer.stem(w) for w in analyzer(doc[1]))
+		  q = lambda doc:doc #(english_stemmer.stem(w) for w in analyzer(doc))
 		  return q
 
 with open('data.csv') as f:
 	for line in f:
 		data = line.split(';')
 		topic.append(data[0])
-		question.append(english_stemmer.stem(data[1]))
+		question.append(data[1])
 
 		if "mortgage" in data[1]:
 			feature.append("101")
@@ -43,11 +43,10 @@ with open('data.csv') as f:
 
 		feature_1.append(data[0])
 		
-       
-X = list(zip(*[feature_1, question, feature]))
+X = list(zip(*[question, feature, feature_1]))
 X_train, X_test, y_train, y_test = train_test_split(X, topic, test_size=0.30, random_state=20)
 
-vectorizer =  CountVectorizer(tokenizer=lambda doc:doc,lowercase=False, min_df=2, max_df=0.5, ngram_range = (1,2))
+vectorizer =  StemmedCountVectorizer(lowercase=False, min_df=2, max_df=0.5, ngram_range = (1,2))
 bag_of_words =vectorizer.fit_transform(X_train)
 
 clf = MultinomialNB(alpha=.01) 
