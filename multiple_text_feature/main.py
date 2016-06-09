@@ -41,12 +41,10 @@ with open('data.csv') as f:
 		else :
 			feature.append("107")
 
-		if ("Bank of America" in data[1]):
-			feature_1.append("bankamerica")
-		else:
-			feature_1.append("otherbank")
+		feature_1.append(data[0])
+		
        
-X = list(zip(*[feature, question, feature_1]))
+X = list(zip(*[feature_1, question, feature]))
 X_train, X_test, y_train, y_test = train_test_split(X, topic, test_size=0.30, random_state=20)
 
 vectorizer =  CountVectorizer(tokenizer=lambda doc:doc,lowercase=False, min_df=2, max_df=0.5, ngram_range = (1,2))
