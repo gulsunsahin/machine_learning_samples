@@ -9,16 +9,6 @@ from sklearn.feature_extraction.text import CountVectorizer
 
 topic = [] 
 question = []
-feature = []
-feature_1 = []
-
-english_stemmer = nltk.stem.SnowballStemmer('english')
-
-class StemmedCountVectorizer(CountVectorizer):
-	  def build_analyzer(self):
-		  analyzer = super(CountVectorizer, self).build_analyzer()
-		  q = lambda doc:(english_stemmer.stem(w) for w in analyzer(doc[1]))
-		  return q
 
 with open('data.csv') as f:
 	for line in f:
@@ -26,30 +16,9 @@ with open('data.csv') as f:
 		topic.append(data[0])
 		question.append(data[1])
 
-		if "mortgage" in data[1]:
-			feature.append("101")
-		elif ("dept" in data[1]) and ("collection" in data[1]):
-			feature.append("102")
-		elif ("credit" in data[1]) and ("reporting" in data[1]):
-			feature.append("103")
-		elif ("student" in data[1]) and ("loan" in data[1]):
-			feature.append("104")
-		elif ("bank" in data[1]) and ("account" in data[1]):
-			feature.append("105")
-		elif ("consumer" in data[1]) and ("loan" in data[1]):
-			feature.append("106")
-		else :
-			feature.append("107")
+X_train, X_test, y_train, y_test = train_test_split(question, topic, test_size=0.30, random_state=20)
 
-		if ("Bank of America" in data[1]):
-			feature_1.append("bankamerica")
-		else:
-			feature_1.append("otherbank")
-       
-X = list(zip(*[feature, question, feature_1]))
-X_train, X_test, y_train, y_test = train_test_split(X, topic, test_size=0.30, random_state=20)
-
-vectorizer =  StemmedCountVectorizer(min_df=2, max_df=0.5, stop_words='english', ngram_range = (1,3))
+vectorizer =  CountVectorizer(min_df=2, max_df=0.5, stop_words='english', ngram_range = (1,3))
 bag_of_words =vectorizer.fit_transform(X_train)
 
 clf = MultinomialNB(alpha=.01) 
