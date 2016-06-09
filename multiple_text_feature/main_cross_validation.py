@@ -1,12 +1,24 @@
 import numpy as np
 import json
+import nltk.stem
+
 from sklearn.naive_bayes import *
 from sklearn import cross_validation
+from sklearn.cross_validation import train_test_split
+from sklearn.feature_extraction.text import CountVectorizer
 
-topic = []
+topic = [] 
 question = []
 feature = []
 feature_1 = []
+
+english_stemmer = nltk.stem.SnowballStemmer('english')
+
+class StemmedCountVectorizer(CountVectorizer):
+	  def build_analyzer(self):
+		  analyzer = super(CountVectorizer, self).build_analyzer()
+		  q = lambda doc:(english_stemmer.stem(w) for w in analyzer(doc[1]))
+		  return q
 
 with open('data.csv') as f:
 	for line in f:
@@ -33,20 +45,15 @@ with open('data.csv') as f:
 			feature_1.append("bankamerica")
 		else:
 			feature_1.append("otherbank")
-        
-
+       
 X = list(zip(*[feature, question, feature_1]))
+X_train, X_test, y_train, y_test = train_test_split(X, topic, test_size=0.30, random_state=20)
 
-from sklearn.cross_validation import train_test_split
-
-X_train, X_test, y_train, y_test = train_test_split(X, topic, test_size=0.30, random_state=50)
-
-from sklearn.feature_extraction.text import CountVectorizer
-vectorizer =  CountVectorizer(tokenizer=lambda doc: doc, lowercase=False)
+vectorizer =  StemmedCountVectorizer(min_df=2, max_df=0.5, stop_words='english', ngram_range = (1,3))
 bag_of_words =vectorizer.fit_transform(X_train)
 
 clf = MultinomialNB(alpha=.01) 
-clf.fit(bag_of_words, y_train, sample_weight=10)
+clf.fit(bag_of_words, y_train)
 
 vectors_test = vectorizer.transform(X_test)
 pred = clf.predict(vectors_test)
