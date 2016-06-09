@@ -46,11 +46,10 @@ with open('data.csv') as f:
 		else:
 			feature_1.append("otherbank")
        
-print(question[0]) 
 X = list(zip(*[feature, question, feature_1]))
 X_train, X_test, y_train, y_test = train_test_split(X, topic, test_size=0.30, random_state=20)
 
-vectorizer =  StemmedCountVectorizer(min_df=2, max_df=0.5, stop_words='english', ngram_range = (1,3))
+vectorizer =  CountVectorizer(tokenizer=lambda doc:doc,lowercase=False, min_df=2, max_df=0.5, ngram_range = (1,2))
 bag_of_words =vectorizer.fit_transform(X_train)
 
 clf = MultinomialNB(alpha=.01) 
