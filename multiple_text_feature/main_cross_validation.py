@@ -18,7 +18,7 @@ with open('data.csv') as f:
 
 X_train, X_test, y_train, y_test = train_test_split(question, topic, test_size=0.30, random_state=20)
 
-vectorizer =  CountVectorizer(min_df=2, max_df=0.5, stop_words='english', ngram_range = (1,3))
+vectorizer =  CountVectorizer(min_df=2, max_df=0.5, stop_words='english', ngram_range = (1,2))
 bag_of_words =vectorizer.fit_transform(X_train)
 
 clf = MultinomialNB(alpha=.01) 
@@ -32,5 +32,5 @@ for index in range(len(pred)):
 	if (pred[index] != y_test[index]):
 		numberFalse=numberFalse+1;
 	
-print("Yuzde degeri:" + str((numberFalse*100)/len(pred)))
+print("Yanlış hesaplama yuzde degeri:" + str((numberFalse*100)/len(pred)))
 print (str(len(pred)) + " ==> veriden yanlis hesaplanan sayisi:" + str(numberFalse))
