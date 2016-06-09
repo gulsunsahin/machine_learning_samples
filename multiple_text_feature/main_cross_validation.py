@@ -53,7 +53,11 @@ vectorizer =  CountVectorizer(tokenizer=lambda doc: doc, lowercase=False)
 bag_of_words =vectorizer.fit_transform(X)
 
 clf = MultinomialNB(alpha=.01) 
-clf.fit(bag_of_words, Y)
+clf.fit(bag_of_words, Y, sample_weight=10)
+
+clf_preds = clf.predict_proba(bag_of_words)
+
+print(clf_preds)
 
 vectors_test_data=[]
 vectors_test_expected_result=[]
