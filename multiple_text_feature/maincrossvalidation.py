@@ -7,13 +7,6 @@ from sklearn import cross_validation
 from sklearn.cross_validation import train_test_split
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.cross_validation import *
-from sklearn import datasets
-
-iris = datasets.load_iris()
-n_samples = iris.data.shape[0]
-
-print(n_samples)
-print(len(iris.data))
 
 topic = [] 
 question = []
