@@ -62,13 +62,10 @@ numeric_topics = [float(i) for i in numeric_topics]
 
 Y = np.array(numeric_topics)
 
-#X = list(zip(*[feature_1, question, feature]))
-X= question
+X = list(zip(*[feature_1, question, feature]))
 vectorizer =  StemmedCountVectorizer(lowercase=False, min_df=2, max_df=0.5, ngram_range = (1,2), stop_words='english', max_features=2000)
 
 cv = ShuffleSplit(len(Y), n_iter= 10, test_size = 0.3, random_state=3)
-
-vectorizer =  CountVectorizer(min_df=2, max_df=0.5, stop_words='english', ngram_range = (1,2))
 clf = MultinomialNB(alpha=.01) 
 
 for train_index, test_index in cv:
