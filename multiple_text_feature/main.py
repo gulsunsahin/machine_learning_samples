@@ -6,6 +6,7 @@ from sklearn.naive_bayes import *
 from sklearn import cross_validation
 from sklearn.cross_validation import train_test_split
 from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.cross_validation import *
 
 topic = [] 
 question = []
@@ -41,24 +42,48 @@ with open('data.csv') as f:
 		else :
 			feature.append("107")
 
-		feature_1.append(data[0])
-		
-X = list(zip(*[question, feature, feature_1]))
-X_train, X_test, y_train, y_test = train_test_split(X, topic, test_size=0.30, random_state=20)
+		if "financial" in data[1] or "Financial" in data[1]:
+			feature_1.append("financialcontains")
+		else: 
+			feature_1.append("financialnotcontains")
 
-vectorizer =  StemmedCountVectorizer(lowercase=False, min_df=2, max_df=0.5, ngram_range = (1,2))
-bag_of_words =vectorizer.fit_transform(X_train)
+unique_topics = list(set(topic))
+new_topic = topic;
+numeric_topics = [name.replace('Mortgage', '1').replace('Debt collection', '2').replace('Credit reporting', '3').replace('Consumer Loan', '4').replace('Bank account or service', '5').replace('Money transfers', '6').replace('Credit card', '7').replace('Student loan', '8').replace('Payday loan', '9').replace('Prepaid card', '10').replace('Other financial service', '11') for name in new_topic]
+numeric_topics = [float(i) for i in numeric_topics]
 
+
+Y = np.array(numeric_topics)
+
+X = list(zip(*[feature_1, question, feature]))
+vectorizer =  StemmedCountVectorizer(lowercase=False, min_df=2, max_df=0.5, ngram_range = (1,2), stop_words='english', max_features=2000)
+
+cv = ShuffleSplit(len(Y), n_iter= 10, test_size = 0.3, random_state=3)
 clf = MultinomialNB(alpha=.01) 
-clf.fit(bag_of_words, y_train)
 
-vectors_test = vectorizer.transform(X_test)
-pred = clf.predict(vectors_test)
+for train_index, test_index in cv:
+	new_X = []
+	new_Y = []
+	new_X_Test = []
+	new_Y_Test = []
+	for index in train_index:
+		new_X.append(X[index])
+		new_Y.append(Y[index])
+	for index in test_index:
+		new_X_Test.append(X[index])
+		new_Y_Test.append(Y[index])
 
-numberFalse=0
-for index in range(len(pred)):
-	if (pred[index] != y_test[index]):
-		numberFalse=numberFalse+1;
+	bag_of_words =vectorizer.fit_transform(new_X)
+
+	clf.fit(bag_of_words, new_Y)
+	vectors_test = vectorizer.transform(new_X_Test)
+	pred = clf.predict(vectors_test)
 	
-print("Yuzde degeri:" + str((numberFalse*100)/len(pred)))
-print (str(len(pred)) + " ==> veriden yanlis hesaplanan sayisi:" + str(numberFalse))
+	numberFalse=0
+	for index in range(len(pred)):
+		if (pred[index] != new_Y_Test[index]):
+			numberFalse=numberFalse+1;
+
+	print(" ******************************Hesaplanan Deger ***************************************")
+	print("Yanlış hesaplama yuzde degeri:" + str((numberFalse*100)/len(pred)))
+	print (str(len(pred)) + " ==> veriden yanlis hesaplanan sayisi:" + str(numberFalse))
