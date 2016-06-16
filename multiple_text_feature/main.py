@@ -43,20 +43,19 @@ with open('data.csv') as f:
 			feature.append("107")
 
 		if "financial" in data[1] or "Financial" in data[1]:
-			feature_1.append("financialcontains")
+			feature_1.append("finans")
 		else: 
-			feature_1.append("financialnotcontains")
+			feature_1.append("not_finans")
 
 unique_topics = list(set(topic))
 new_topic = topic;
 numeric_topics = [name.replace('Mortgage', '1').replace('Debt collection', '2').replace('Credit reporting', '3').replace('Consumer Loan', '4').replace('Bank account or service', '5').replace('Money transfers', '6').replace('Credit card', '7').replace('Student loan', '8').replace('Payday loan', '9').replace('Prepaid card', '10').replace('Other financial service', '11') for name in new_topic]
 numeric_topics = [float(i) for i in numeric_topics]
 
-
 Y = np.array(numeric_topics)
 
 X = list(zip(*[feature_1, question, feature]))
-vectorizer =  StemmedCountVectorizer(lowercase=False, min_df=2, max_df=0.5, ngram_range = (1,2), stop_words='english', max_features=2000)
+vectorizer =  CountVectorizer(tokenizer=lambda doc:doc, lowercase=False, min_df=2, max_df=0.5, ngram_range = (1,2), stop_words='english', max_features=2000)
 
 cv = ShuffleSplit(len(Y), n_iter= 10, test_size = 0.3, random_state=3)
 clf = MultinomialNB(alpha=.01) 
